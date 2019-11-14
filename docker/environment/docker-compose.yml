@@ -1,7 +1,7 @@
 version: '3'
 services:
   redis:
-    image: 5.0-alpine
+    image: redis:5.0-alpine
     container_name: redis
     command: redis-server --appendonly yes
     volumes:
