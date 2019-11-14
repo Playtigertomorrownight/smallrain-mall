@@ -1,4 +1,6 @@
-package com.smallrain.mall;
+package com.smallrain.mall.beans;
+
+import com.smallrain.mall.enums.ResultCode;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

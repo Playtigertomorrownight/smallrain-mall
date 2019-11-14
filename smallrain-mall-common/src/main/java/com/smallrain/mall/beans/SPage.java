@@ -1,4 +1,4 @@
-package com.smallrain.mall;
+package com.smallrain.mall.beans;
 
 import java.util.List;
 

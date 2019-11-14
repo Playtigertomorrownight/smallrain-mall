@@ -1,4 +1,4 @@
-package com.smallrain.mall;
+package com.smallrain.mall.beans;
 
 /**
  * 封装API的错误码 

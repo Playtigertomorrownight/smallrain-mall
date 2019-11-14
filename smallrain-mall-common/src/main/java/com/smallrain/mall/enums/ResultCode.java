@@ -1,4 +1,6 @@
-package com.smallrain.mall;
+package com.smallrain.mall.enums;
+
+import com.smallrain.mall.beans.ErrorCode;
 
 /**
  * 枚举了一些常用API操作码
