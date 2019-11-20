@@ -1,6 +1,13 @@
+<style>
+  .el-form-item__label {
+      font-size: 14px;
+      font-weight: 600;
+  }
+</style>
+
 <template>
   <div style="margin-top: 50px">
-    <el-form :model="value" :rules="rules" ref="productInfoForm" label-width="120px" style="width: 600px" size="small">
+    <el-form :model="value" :rules="rules" ref="productInfoForm" label-width="120px" label-position="left" style="width: 90%; padding-left:5%;" size="small">
       <el-form-item label="商品分类：" prop="productCategoryId">
         <el-cascader
           v-model="selectProductCateValue"
@@ -52,7 +59,7 @@
         <el-input v-model="value.weight" style="width: 300px"></el-input>
         <span style="margin-left: 20px">克</span>
       </el-form-item>
-      <el-form-item label="排序">
+      <el-form-item label="排序码：">
         <el-input v-model="value.sort"></el-input>
       </el-form-item>
       <el-form-item style="text-align: center">
@@ -195,6 +202,3 @@
     }
   }
 </script>
-
-<style scoped>
-</style>

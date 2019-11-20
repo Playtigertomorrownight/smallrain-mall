@@ -3,7 +3,8 @@
     <el-form :model="value"
              ref="productRelationForm"
              label-width="120px"
-             style="width: 680px"
+             label-position="left"
+             style="width: 90%; padding-left:5%;"
              size="small">
       <el-form-item label="关联专题：">
         <el-transfer

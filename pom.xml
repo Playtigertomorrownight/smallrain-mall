@@ -12,6 +12,7 @@
 		<module>smallrain-mall-common</module>
 		<module>smallrain-mall-mbg</module>
 		<module>smallrain-mall-admin</module>
+		<module>smallrain-mall-security</module>
 	</modules>
 
 	<parent>
@@ -90,6 +91,12 @@
 				<groupId>com.smallrain.mall</groupId>
 				<artifactId>smallrain-mall-mbg</artifactId>
 				<version>${smallrain-mall-mbg.version}</version>
+			</dependency>
+			<!--mall中安全验证模块 -->
+			<dependency>
+				<groupId>com.smallrain.mall</groupId>
+				<artifactId>smallrain-mall-security</artifactId>
+				<version>${smallrain-mall-security.version}</version>
 			</dependency>
 			<!--MyBatis分页插件starter -->
 			<dependency>

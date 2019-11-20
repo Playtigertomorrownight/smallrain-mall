@@ -1,6 +1,32 @@
+
+<style scoped>
+  .littleMarginLeft {
+    margin-left: 10px;
+  }
+
+  .littleMarginTop {
+    margin-top: 10px;
+  }
+
+  .paramInput {
+    width: 250px;
+  }
+
+  .paramInputLabel {
+    display: inline-block;
+    width: 100px;
+    text-align: right;
+    padding-right: 10px
+  }
+
+  .cardBg {
+    background: #F8F9FC;
+  }
+</style>
+
 <template>
   <div style="margin-top: 50px">
-    <el-form :model="value" ref="productAttrForm" label-width="120px" style="width: 720px" size="small">
+    <el-form :model="value" ref="productAttrForm" label-width="120px" style="width: 910px" size="small">
       <el-form-item label="属性类型：">
         <el-select v-model="value.productAttributeCategoryId"
                    placeholder="请选择属性类型"
@@ -132,10 +158,10 @@
       <el-form-item label="规格参数：">
         <el-tabs v-model="activeHtmlName" type="card">
           <el-tab-pane label="电脑端详情" name="pc">
-            <tinymce :width="595" :height="300" v-model="value.detailHtml"></tinymce>
+            <tinymce :width="tinymceWidth" :height="300" v-model="value.detailHtml"></tinymce>
           </el-tab-pane>
           <el-tab-pane label="移动端详情" name="mobile">
-            <tinymce :width="595" :height="300" v-model="value.detailMobileHtml"></tinymce>
+            <tinymce :width="tinymceWidth" :height="300" v-model="value.detailMobileHtml"></tinymce>
           </el-tab-pane>
         </el-tabs>
       </el-form-item>
@@ -166,6 +192,7 @@
     },
     data() {
       return {
+        tinymceWidth: 785,
         //编辑模式时是否初始化成功
         hasEditCreated:false,
         //商品属性分类下拉选项
@@ -566,27 +593,3 @@
   }
 </script>
 
-<style scoped>
-  .littleMarginLeft {
-    margin-left: 10px;
-  }
-
-  .littleMarginTop {
-    margin-top: 10px;
-  }
-
-  .paramInput {
-    width: 250px;
-  }
-
-  .paramInputLabel {
-    display: inline-block;
-    width: 100px;
-    text-align: right;
-    padding-right: 10px
-  }
-
-  .cardBg {
-    background: #F8F9FC;
-  }
-</style>

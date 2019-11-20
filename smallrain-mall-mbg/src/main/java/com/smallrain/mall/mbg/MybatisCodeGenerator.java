@@ -28,7 +28,7 @@ import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 public class MybatisCodeGenerator {
 
   public static void main(String[] args) {
-    createCode("ums_permission");
+    createCode("cms_help_category");
   }
 
   private static void createCode(String tableName) {

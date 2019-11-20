@@ -31,15 +31,15 @@
         <h2> Hello, 你好 <br> <br>  欢迎登录到  <label>smallrain</label> </h2>
       </div>
       <el-form :model="form" status-icon :rules="rules" ref="loginForm" :label-position="labelPosition" :hide-required-asterisk="false" @keyup.enter.native="submitForm('loginForm')">
-        <el-form-item label="用户名：" required prop="account">
-          <el-input placeholder="请输入用户名"  v-model="form.account"></el-input>
+        <el-form-item label="用户名：" required prop="username">
+          <el-input placeholder="请输入用户名"  v-model="form.username"></el-input>
         </el-form-item>
         <el-form-item label="密码：" required prop="password">
           <el-input placeholder="请输入密码"  v-model="form.password" type="password"></el-input>
         </el-form-item>
-        <div style="text-align: right;margin: 30px 1px 6px 0px;">
+        <!--<div style="text-align: right;margin: 30px 1px 6px 0px;">
           <el-checkbox v-model="form.rememberMe" label="2">记住登录状态</el-checkbox>
-        </div>
+        </div>-->
       </el-form>
       <div slot="footer" class="dialog-footer" v-cloak>
         <el-button style="width:100%;" type="primary" :disabled="buttonStatus" :loading="buttonLoading"  @click="submitForm('loginForm')">{{buttonText}}</el-button>
@@ -49,16 +49,19 @@
 </template>
 
 <script>
+  import {setSupport,getSupport,setCookie,getCookie} from '@/utils/support';
+  import md5 from 'js-md5';
+
   export default {
     name: 'login2',
     data() {
-      let accountPattern = /^[a-zA-Z0-9_-]{4,16}$/;  //用户名正则，4到16位（字母，数字，下划线，减号）
-      let passwordPattern = /^.*(?=.{4,18})(?=.*\d)(?=.*[A-Za-z])(?=.*[!@#$%^&*?.]).*$/;  //密码强度正则，最少4位，包括至少1 个字母，1个数字，1个特殊字符
-      let validateAccount = (rule, value, callback) => {
+      let usernamePattern = /^[a-zA-Z0-9_-]{4,16}$/;  //用户名正则，4到16位（字母，数字，下划线，减号）
+      let passwordPattern = /^.*(?=.{4,18})(?=.*\d)(?=.*[A-Za-z]).*$/;  //密码强度正则，最少4位，包括至少1 个字母，1个数字，1个特殊字符
+      let validateUsername = (rule, value, callback) => {
         if (value === '') {
           return callback(new Error('账号不能为空！'));
         }
-        if(!accountPattern.test(value)){
+        if(!usernamePattern.test(value)){
           return callback(new Error('账号格式不正确！4 到 16 位（字母，数字，_，-）'));
         }
         callback();
@@ -68,7 +71,7 @@
           return callback(new Error('密码不能为空！'));
         }
         if(!passwordPattern.test(value)){
-          return callback(new Error('密码格式不正确！4 到 18 位，包括至少1 个字母，1个数字，1个特殊字符'));
+          return callback(new Error('密码格式不正确！4 到 18 位，包括至少1 个字母，1个数字'));
         }
         callback();
       };
@@ -81,13 +84,12 @@
         buttonText: "登录",
         buttonStatus: false,
         form: {
-          account: "",
+          username: "",
           password: "",
-          rememberMe: false
         },
         rules: {
-          account: [
-            { validator: validateAccount, trigger: 'blur' }
+          username: [
+            { validator: validateUsername, trigger: 'blur' }
           ],
           password: [
             { validator: validatePassword, trigger: 'blur' }
@@ -107,6 +109,16 @@
         deep: true
       },
     },
+    created() {
+      this.form.username = getCookie("username");
+      this.form.password = getCookie("password");
+      if(!this.form.username){
+        this.form.username = 'admin';
+      }
+      if(this.form.password === undefined||this.form.password==null){
+        this.form.password = '';
+      }
+    },
     methods: {
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
@@ -116,31 +128,22 @@
             this.buttonText="登录中，请稍后..";
             this.buttonStatus = true;
             //开始登录
-            let loginData = {};
-            //对密码进行加密
-            loginData['account'] = this.form.account;
-            loginData['password'] = hex_md5(this.form.password);
-            loginData['rememberMe'] = this.form.rememberMe;
-            let that = this;
-            sendRequest(this,'${domain}/login/web','POST',loginData,function(res){
-              if('HTTP_ERROR'==res) {
-                that.buttonText="登录";
-                that.buttonStatus = false;
-                that.buttonLoading = false;
-              }
-              let resData = res.data;
-              if(0 != resData.status){
-                that.$message.error(resData.message);
-                that.buttonText="登录";
-                that.buttonStatus = false;
-                that.buttonLoading = false;
-                return ;
-              }
-              that.$message.info('登录成功，正在跳转..');
-              that.buttonText="登录成功，正在跳转..";
-              that.buttonStatus = false;
-              window.location.href="${domain}/index";
-            });
+            let loginForm = {
+              username: this.form.username,
+              password: md5(this.form.password)
+            }
+            this.$store.dispatch('Login', loginForm).then(() => {
+              this.buttonLoading = false;
+              this.buttonText="登录成功，正在跳转..";
+              this.buttonStatus = false;
+              setCookie("username",loginForm.username,15);
+              setCookie("password",loginForm.password,15);
+              this.$router.push({path: '/'})
+            }).catch(() => {
+              this.buttonText="登录";
+              this.buttonStatus = false;
+              this.buttonLoading = false;
+            })
           } else {
             this.buttonText="数据格式不正确，请修改后登陆";
             this.buttonStatus = true;

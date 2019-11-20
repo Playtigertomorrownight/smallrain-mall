@@ -1,39 +1,60 @@
+<style>
+  .form-container {
+    width: 98%;
+    padding: 12px;
+    position: relative;
+    margin: 15px;
+  }
+  .info-form {
+    width: 80%;
+    margin: auto;
+  }
+</style>
+
 <template> 
-  <el-card class="form-container" shadow="never">
+  <div class="app-container">
+    <el-card class="form-container" shadow="never">
     <el-steps :active="active" finish-status="success" align-center>
       <el-step title="填写商品信息"></el-step>
       <el-step title="填写商品促销"></el-step>
       <el-step title="填写商品属性"></el-step>
       <el-step title="选择商品关联"></el-step>
     </el-steps>
-    <product-info-detail
-      v-show="showStatus[0]"
-      v-model="productParam"
-      :is-edit="isEdit"
-      @nextStep="nextStep">
-    </product-info-detail>
-    <product-sale-detail
-      v-show="showStatus[1]"
-      v-model="productParam"
-      :is-edit="isEdit"
-      @nextStep="nextStep"
-      @prevStep="prevStep">
-    </product-sale-detail>
-    <product-attr-detail
-      v-show="showStatus[2]"
-      v-model="productParam"
-      :is-edit="isEdit"
-      @nextStep="nextStep"
-      @prevStep="prevStep">
-    </product-attr-detail>
-    <product-relation-detail
-      v-show="showStatus[3]"
-      v-model="productParam"
-      :is-edit="isEdit"
-      @prevStep="prevStep"
-      @finishCommit="finishCommit">
-    </product-relation-detail>
+    <div class="info-form">
+      <!--商品信息-->
+      <product-info-detail
+        v-show="showStatus[0]"
+        v-model="productParam"
+        :is-edit="isEdit"
+        @nextStep="nextStep">
+      </product-info-detail>
+      <!--促销信息-->
+      <product-sale-detail
+        v-show="showStatus[1]"
+        v-model="productParam"
+        :is-edit="isEdit"
+        @nextStep="nextStep"
+        @prevStep="prevStep">
+      </product-sale-detail>
+      <!--商品属性设置信息-->
+      <product-attr-detail
+        v-show="showStatus[2]"
+        v-model="productParam"
+        :is-edit="isEdit"
+        @nextStep="nextStep"
+        @prevStep="prevStep">
+      </product-attr-detail>
+      <!--商品关联信息-->
+      <product-relation-detail
+        v-show="showStatus[3]"
+        v-model="productParam"
+        :is-edit="isEdit"
+        @prevStep="prevStep"
+        @finishCommit="finishCommit">
+      </product-relation-detail>
+    </div>
   </el-card>
+  </div>
 </template>
 <script>
   import ProductInfoDetail from './ProductInfoDetail';
@@ -176,10 +197,3 @@
     }
   }
 </script>
-<style>
-  .form-container {
-    width: 800px;
-  }
-</style>
-
-

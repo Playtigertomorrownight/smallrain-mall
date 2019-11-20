@@ -1,3 +1,29 @@
+<style scoped>
+  .tinymce-container {
+    position: relative;
+  }
+
+  .tinymce-container >>> .mce-fullscreen {
+    z-index: 10000;
+  }
+
+  .tinymce-textarea {
+    visibility: hidden;
+    z-index: -1;
+  }
+
+  .editor-custom-btn-container {
+    position: absolute;
+    right: 20px;
+    top: 5px;
+    /*z-index: 2005;*/
+  }
+
+  .editor-upload-btn {
+    display: inline-block;
+  }
+</style>
+
 <template>
   <div class="tinymce-container editor-container">
     <textarea class="tinymce-textarea" :id="tinymceId"></textarea>
@@ -136,28 +162,3 @@
   }
 </script>
 
-<style scoped>
-  .tinymce-container {
-    position: relative;
-  }
-
-  .tinymce-container >>> .mce-fullscreen {
-    z-index: 10000;
-  }
-
-  .tinymce-textarea {
-    visibility: hidden;
-    z-index: -1;
-  }
-
-  .editor-custom-btn-container {
-    position: absolute;
-    right: 10px;
-    top: 2px;
-    /*z-index: 2005;*/
-  }
-
-  .editor-upload-btn {
-    display: inline-block;
-  }
-</style>
