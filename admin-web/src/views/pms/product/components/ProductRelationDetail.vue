@@ -1,3 +1,8 @@
+<style>
+  .el-transfer-panel {
+    width: 300px;
+  }
+</style>
 <template>
   <div style="margin-top: 50px">
     <el-form :model="value"
@@ -140,7 +145,3 @@
     }
   }
 </script>
-
-<style scoped>
-
-</style>

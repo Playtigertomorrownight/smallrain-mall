@@ -1,9 +1,12 @@
-  <template> 
+<template> 
   <div>
     <el-upload
-      action="http://macro-oss.oss-cn-shenzhen.aliyuncs.com"
-      :data="dataObj"
-      list-type="picture-card"
+      ref="upload"
+      :action="uploadUrl"
+      :data="uploadData"
+      auto-upload=false
+      :list-type="listStyle"
+      :multiple="multiple"
       :file-list="fileList"
       :before-upload="beforeUpload"
       :on-remove="handleRemove"
@@ -11,8 +14,7 @@
       :on-preview="handlePreview"
       :limit="maxCount"
       :on-exceed="handleExceed"
-    >
-      <i class="el-icon-plus"></i>
+    ><i class="el-icon-plus"></i>
     </el-upload>
     <el-dialog :visible.sync="dialogVisible">
       <img width="100%" :src="dialogImageUrl" alt="">
@@ -21,30 +23,33 @@
 </template>
 <script>
   import {policy} from '@/api/oss'
+  import * as qiniu from 'qiniu-js';
 
   export default {
-    name: 'multiUpload',
+    name: 'qiniuUpload',
     props: {
       //图片属性数组
       value: Array,
+      //是否多文件
+      multiple:{
+        type: Boolean,
+        default: false
+      },
       //最大上传图片数量
       maxCount:{
         type:Number,
-        default:5
+        default:15
       }
     },
     data() {
       return {
-        dataObj: {
-          policy: '',
-          signature: '',
-          key: '',
-          ossaccessKeyId: '',
-          dir: '',
-          host: ''
-        },
+        uploadUrl: "https://upload.qiniup.com",
+        listStyle: this.multiply?"picture-card":"picture",
         dialogVisible: false,
-        dialogImageUrl:null
+        dialogImageUrl: "",
+        uploadData: {
+
+        }
       };
     },
     computed: {
@@ -71,22 +76,8 @@
         this.dialogVisible = true;
         this.dialogImageUrl=file.url;
       },
-      beforeUpload(file) {
-        let _self = this;
-        return new Promise((resolve, reject) => {
-          policy().then(response => {
-            _self.dataObj.policy = response.data.policy;
-            _self.dataObj.signature = response.data.signature;
-            _self.dataObj.ossaccessKeyId = response.data.accessKeyId;
-            _self.dataObj.key = response.data.dir + '/${filename}';
-            _self.dataObj.dir = response.data.dir;
-            _self.dataObj.host = response.data.host;
-            resolve(true)
-          }).catch(err => {
-            console.log(err)
-            reject(false)
-          })
-        })
+      beforeUpload(file) {   //上传前，获取token
+
       },
       handleUploadSuccess(res, file) {
         this.fileList.push({url: file.name,url:this.dataObj.host + '/' + this.dataObj.dir + '/' + file.name});

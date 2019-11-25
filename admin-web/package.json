@@ -17,6 +17,7 @@
     "js-md5": "^0.7.3",
     "normalize.css": "^8.0.0",
     "nprogress": "^0.2.0",
+    "qiniu-js": "^2.5.5",
     "v-charts": "^1.19.0",
     "v-distpicker": "^1.0.20",
     "vue": "^2.5.2",
