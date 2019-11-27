@@ -4,7 +4,6 @@
       ref="upload"
       :action="uploadUrl"
       :data="uploadData"
-      auto-upload=false
       :list-type="listStyle"
       :multiple="multiple"
       :file-list="fileList"
@@ -22,14 +21,17 @@
   </div>
 </template>
 <script>
-  import {policy} from '@/api/oss'
-  import * as qiniu from 'qiniu-js';
+  import {qiniuToken} from '@/api/oss'
 
   export default {
     name: 'qiniuUpload',
     props: {
       //图片属性数组
-      value: Array,
+      value: {
+        type: Array,
+        required: false,
+        default: []
+      },
       //是否多文件
       multiple:{
         type: Boolean,
@@ -48,7 +50,11 @@
         dialogVisible: false,
         dialogImageUrl: "",
         uploadData: {
-
+          token: "",
+          config: {
+            useCdnDomain: false,
+            region: "qiniu.region.z0"
+          }
         }
       };
     },
@@ -77,7 +83,17 @@
         this.dialogImageUrl=file.url;
       },
       beforeUpload(file) {   //上传前，获取token
-
+        let _self = this;
+        let fileName = null;
+        return new Promise((resolve, reject) => {
+          qiniuToken().then(response => {
+            _self.uploadData.token = response.data;
+            resolve(true)
+          }).catch(err => {
+            console.log(err)
+            reject(false)
+          })
+        })
       },
       handleUploadSuccess(res, file) {
         this.fileList.push({url: file.name,url:this.dataObj.host + '/' + this.dataObj.dir + '/' + file.name});

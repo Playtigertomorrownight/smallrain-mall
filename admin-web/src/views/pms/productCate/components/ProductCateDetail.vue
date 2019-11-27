@@ -71,7 +71,8 @@
   import {fetchList, createProductCate, updateProductCate, getProductCate} from '@/api/productCate';
   import {fetchListWithAttr} from '@/api/productAttrCate';
   import {getProductAttrInfo} from '@/api/productAttr';
-  import SingleUpload from '@/components/Upload/singleUpload';
+  import SingleUpload from '@/components/QiniuUpload/singleUpload';
+
 
   const defaultProductCate = {
     description: '',
