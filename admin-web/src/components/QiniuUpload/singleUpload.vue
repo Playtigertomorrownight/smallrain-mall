@@ -20,11 +20,24 @@
 </template>
 <script>
   import {qiniuToken} from '@/api/oss'
+  import {formatDate} from '@/utils/date'
+
 
   export default {
     name: 'singleUpload',
     props: {
-      value: String
+      value: {
+        type : String,
+        default: ""
+      },
+      defaultName: {
+        type: Boolean,
+        default: true
+      },
+      usePublic: {
+        type: Boolean,
+        default: true
+      }
     },
     computed: {
       imageUrl() {
@@ -45,7 +58,7 @@
       },
       showFileList: {
         get: function () {
-          return this.value !== null && this.value !== ''&& this.value!==undefined;
+          return this.value !== null && this.value !== '' && this.value!==undefined;
         },
         set: function (newValue) {
         }
@@ -56,6 +69,7 @@
         dataObj: {
           key: "",
           token: "",
+          baseUrl: "",
           config: {
             useCdnDomain: false,
             region: "qiniu.region.z0"
@@ -76,11 +90,24 @@
       },
       beforeUpload(file) {
         console.log(file)
+        let fieName = file.name;
+        //设置文件名
+        if(this.defaultName){
+          fieName = formatDate(new Date(),"yyyyMMdd-hms") + fieName.substring(fieName.indexOf("."));
+        }
+        //设置文件目录
+        let fileType = file.type;
+        if(fileType && -1 != fileType.indexOf("/")){
+          fileType = fileType.substring(0,fileType.indexOf("/"))+"s";
+        }
+        fileType = fileType?fileType:"default";
         let _self = this;
         return new Promise((resolve, reject) => {
-          qiniuToken().then(response => {
-            _self.dataObj.token = response.data;
-            _self.dataObj.key = 'images/'+file.name;
+          qiniuToken(this.usePublic).then(response => {
+            _self.dataObj.token = response.data.token;
+            _self.dataObj.key = fileType + "/" + fieName;
+            _self.baseUrl = response.data.baseUrl;
+            console.log(_self.dataObj);
             resolve(true)
           }).catch(err => {
             console.log(err)
@@ -91,7 +118,7 @@
       handleUploadSuccess(res, file) {
         this.showFileList = true;
         this.fileList.pop();
-        this.fileList.push({name: file.name, url: this.dataObj.host + '/' + this.dataObj.dir + '/' + file.name});
+        this.fileList.push({name: file.name, url: this.baseUrl + '/' + this.dataObj.key });
         this.emitInput(this.fileList[0].url);
       }
     }
